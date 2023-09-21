@@ -6,41 +6,75 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 // component imports
-import CardList from "../components/CardList"
+import CardList from "../components/CardList";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+	const [apiData, setApiData] = useState([]);
+	const [dataQuery, setDataQuery] = useState("");
+	const [searchQuery, setSearchQuery] = useState("");
+	const [filteredData, setFilteredData] = useState([]);
+	const [searchedData, setSearchedData] = useState([]);
 
-  const [launchData, setLaunchData] = useState([])
-
-  // API fetch logic
-  useEffect(() => {
-    const queryOptions = {
+	// API fetch logic
+	useEffect(() => {
+		const queryOptions = {
 			select: "id name date_utc success upcoming details failures links",
-			sort: "date_utc", // Sort by date_utc field
-			limit: 100, // Limit the number of results
+			sort: "date_utc",
+			limit: 100,
 		};
 
-		async function getlaunchData() {
+		const getlaunchData = async () => {
 			try {
 				const url = "https://api.spacexdata.com/v5/launches/query";
 				const response = await axios.post(url, {
-          options: queryOptions
-        });
-				// console.log(response.data.docs);
-        setLaunchData(response.data.docs);
-				
+					options: queryOptions,
+				});
+				setApiData(response.data.docs);
 			} catch (error) {
 				console.error(error);
 			}
-		}
+		};
 
-    getlaunchData()
+		getlaunchData();
 	}, []);
 
-	return (
+	// Filter API Data Logic
+	useEffect(() => {
+		const filterBySuccess = apiData.filter(launchItem => {
+			return launchItem.success;
+		});
 
+		const filterByFailure = apiData.filter(launchItem => {
+			return !launchItem.success;
+		});
+
+		const filterByUpcoming = apiData.filter(launchItem => {
+			return launchItem.upcoming;
+		});
+
+		dataQuery === "success"
+			? setFilteredData(filterBySuccess)
+			: dataQuery === "upcoming"
+			? setFilteredData(filterByUpcoming)
+			: dataQuery === "failed"
+			? setFilteredData(filterByFailure)
+			: setFilteredData(apiData);
+	}, [dataQuery, apiData]);
+
+	// Search Filtered OR Unfiltered Logic
+	useEffect(() => {
+		const searchData = filteredData.filter(launchItem => {
+			return launchItem.name.toLowerCase().includes(searchQuery.toLowerCase());
+		});
+
+		searchQuery.length > 0
+			? setSearchedData(searchData)
+			: setSearchedData(filteredData);
+	}, [searchQuery, filteredData]);
+
+	return (
 		<>
 			<Head>
 				<title>Create Next App</title>
@@ -52,9 +86,30 @@ export default function Home() {
 				<h1 className={styles.header__title}>Space X Launch Monitor</h1>
 			</header>
 			<main className={`${styles.main} ${inter.className}`}>
-				<section className={styles.main__container}>
-					<CardList launchInfo={launchData} />
-				</section>
+				<nav>
+					<input
+						type='text'
+						placeholder='Search by launch..'
+						value={searchQuery}
+						onChange={e => {
+							setSearchQuery(e.target.value);
+						}}
+					/>
+
+					<select
+						id='filters'
+						onChange={e => {
+							console.log(e.target.value);
+							setDataQuery(e.target.value);
+						}}
+					>
+						<option value='all'>All</option>
+						<option value='success'>Launch Success</option>
+						<option value='failed'>Launch Failure</option>
+						<option value='upcoming'>Future Launches</option>
+					</select>
+				</nav>
+				<CardList launchInfo={searchedData} />
 
 				<footer>Made by Pete</footer>
 			</main>
