@@ -27,6 +27,8 @@ Layout
 	display: grid;
 	gap: 5px;
 	grid-template-columns: repeat(auto-fit, minmax(min(17rem, 100%), 1fr));
+  max-height: 90vh;
+  overflow: scroll;
 }
 
 .grid__card {
@@ -40,6 +42,11 @@ Layout
   flex-direction: column;
   gap: 5px;
 } 
+
+/* Pagination */
+.grid__pagination {
+  width: 80%;
+}
 
 /* Images */
 .img {

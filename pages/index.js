@@ -17,6 +17,8 @@ export default function Home() {
 	const [filteredData, setFilteredData] = useState([]);
 	const [searchedData, setSearchedData] = useState([]);
 
+
+
 	// API fetch logic
 	useEffect(() => {
 		const queryOptions = {
@@ -31,6 +33,8 @@ export default function Home() {
 				const response = await axios.post(url, {
 					options: queryOptions,
 				});
+    console.log(response);
+
 				setApiData(response.data.docs);
 			} catch (error) {
 				console.error(error);
