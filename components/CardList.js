@@ -26,8 +26,9 @@ function CardList({ launchInfo }) {
 
 	return (
 		<>
-			<section className={styles.main__grid}>
+			<section role="card-container" className={styles.main__grid}>
 				{renderCards}
+			</section>
 				<ReactPaginate
 					pageCount={pageCount}
 					previousLabel='< previous'
@@ -41,7 +42,6 @@ function CardList({ launchInfo }) {
 					nextLinkClassName={styles.pagination__nextBtn}
 					activeLinkClassName={styles.pagination__activeBtn}
 				/>
-			</section>
 		</>
 	);
 }

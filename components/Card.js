@@ -17,17 +17,21 @@ function Card({ launch }) {
 		<>
 			<article key={launch.id} className={styles.grid__card}>
 				<Image
-                    className={styles.img}
+					className={styles.img}
 					src={launch.links.patch.small}
 					alt='Rocket Patch'
-					width={250}
-					height={250}
+					width={200}
+					height={200}
 				/>
-				<h2>Name: {launch.name} </h2>
-				<p>Date: {date} </p>
-				<p>Launch Status: {status}</p>
-				<p>Details: {launch.details} </p>
-				{!launch.success && <p>Failure Reason: {launch.failures[0].reason}</p>}
+				<h2>{launch.name} </h2>
+				<div className={styles.card__content}>
+					<p>Date: {date} </p>
+					<p>Launch Status: {status}</p>
+					<p>{launch.details} </p>
+					{!launch.success && (
+						<p>Failure Reason: {launch.failures[0].reason}</p>
+					)}
+				</div>
 			</article>
 		</>
 	);
