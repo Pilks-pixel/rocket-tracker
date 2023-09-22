@@ -34,7 +34,6 @@ export default function Home() {
 				const response = await axios.post(url, {
 					options: queryOptions,
 				});
-    console.log(response);
 
 				setApiData(response.data.docs);
 			} catch (error) {
@@ -108,7 +107,6 @@ export default function Home() {
 							className={styles.nav__select}
 							id='filter-data'
 							onChange={e => {
-								console.log(e.target.value);
 								setDataQuery(e.target.value);
 							}}
 						>

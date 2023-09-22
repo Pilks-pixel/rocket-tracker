@@ -1,40 +1,71 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# SpaceX launch tracker
 
-## Getting Started
+![project page screenshot](/public/screenshot.png)
 
-First, run the development server:
+## Deployment
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+:rocket: **Deployed** with Vercel at [rocket tracker](https://rocket-tracker.vercel.app/)
+
+## About
+
+This app tracks rocket launches from the [space X API](https://github.com/r-spacex/SpaceX-API). The fetched data can be searched or filtered by user input and is also **mobile responsive**.
+
+## Instructions
+
+Clone down to local machine, `npm install` and `cd space_app`
+
+`npm run dev` to run in the development mode.
+
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+
+## Technologies
+
+I built this app with **Javascript** in the **React / Next.js** framework. I've chosen React because it allows for reusable components, meaning I could keep my files smaller with more readable code and use where necessary in the app. While Next.js gave added features, such as a built in image component. Which optimized images automatically to next gen formats like WEBP. I felt this was important as the app would be rendering multiple images at the same time from the fetched data.
+
+For fetching from the API, **Axios** was used to enable automatic JSON parsing, allowing a cleaner syntax.
+
+To optimize rendering performance, I've paginated the returned data and used the NPM package **React-Paginate** to provide less verbose page button functionality.
+
+Testing was done with **Jest** to give a clear way to test code correctness.
+
+## Wins
+
+-[x] Successfully fetched data from the API with a query to optimize results for only required parameters.
+
+-[x] Results can be filtered and searched, according to user input.
+
+-[x] Functions kept pure and with single responsibility where possible for DRY & KISS code principles.  
+
+-[x] Mobile First Design, with CSS Grid and modern CSS functions. Therefore I was able to reduce use of media queries.
+
+## Challenges
+
+-[x] Testing with Jest, I was unable to get more tests to pass because I struggled mocking the API call to my components. However as my first experience with testing I can now appreciate its value for improved code confidence & scalability. I look forward to more exposure with this technology.
+
+
+## Significant code
+```javascript
+// useEffect with filter functions and ternary operator handled user input without any side effects on the original API data. 
+	useEffect(() => {
+		const filterBySuccess = apiData.filter(launchItem => {
+			return launchItem.success;
+		});
+
+		const filterByFailure = apiData.filter(launchItem => {
+			return !launchItem.success;
+		});
+
+		const filterByUpcoming = apiData.filter(launchItem => {
+			return launchItem.upcoming;
+		});
+
+		dataQuery === "success"
+			? setFilteredData(filterBySuccess)
+			: dataQuery === "upcoming"
+			? setFilteredData(filterByUpcoming)
+			: dataQuery === "failed"
+			? setFilteredData(filterByFailure)
+			: setFilteredData(apiData);
+	}, [dataQuery, apiData]);
+
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
