@@ -7,9 +7,8 @@ import { useEffect, useState } from "react";
 // component imports
 import CardList from "../components/CardList";
 
-const roboto = Roboto({ subsets: ["latin"], weight: ["300" , "400"] });
+const roboto = Roboto({ subsets: ["latin"], weight: ["300", "400"] });
 const titillium = Titillium_Web({ subsets: ["latin"], weight: "600" });
-
 
 export default function Home() {
 	const [apiData, setApiData] = useState([]);
@@ -17,8 +16,6 @@ export default function Home() {
 	const [searchQuery, setSearchQuery] = useState("");
 	const [filteredData, setFilteredData] = useState([]);
 	const [searchedData, setSearchedData] = useState([]);
-
-
 
 	// API fetch logic
 	useEffect(() => {
@@ -46,23 +43,21 @@ export default function Home() {
 
 	// Filter API Data Logic
 	useEffect(() => {
-		const filterBySuccess = apiData.filter(launchItem => {
-			return launchItem.success;
-		});
+		const filterResults = dataQuery => {
+			return apiData.filter(launchItem => {
+				return launchItem[dataQuery];
+			});
+		};
 
 		const filterByFailure = apiData.filter(launchItem => {
 			return !launchItem.success;
 		});
 
-		const filterByUpcoming = apiData.filter(launchItem => {
-			return launchItem.upcoming;
-		});
-
 		dataQuery === "success"
-			? setFilteredData(filterBySuccess)
+			? setFilteredData(filterResults(dataQuery))
 			: dataQuery === "upcoming"
-			? setFilteredData(filterByUpcoming)
-			: dataQuery === "failed"
+			? setFilteredData(filterResults(dataQuery))
+			: dataQuery === "failure"
 			? setFilteredData(filterByFailure)
 			: setFilteredData(apiData);
 	}, [dataQuery, apiData]);
@@ -112,7 +107,7 @@ export default function Home() {
 						>
 							<option value='all'>All</option>
 							<option value='success'>Launch Success</option>
-							<option value='failed'>Launch Failure</option>
+							<option value='failure'>Launch Failure</option>
 							<option value='upcoming'>Future Launches</option>
 						</select>
 					</div>
@@ -122,4 +117,3 @@ export default function Home() {
 		</>
 	);
 }
-
