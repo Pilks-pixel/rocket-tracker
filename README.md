@@ -47,23 +47,21 @@ Testing was done with **Jest** to give a clear way to test code correctness.
 ```javascript
 // useEffect with filter functions and ternary operator handled user input without any side effects on the original API data. 
 	useEffect(() => {
-		const filterBySuccess = apiData.filter(launchItem => {
-			return launchItem.success;
-		});
+		const filterResults = dataQuery => {
+			return apiData.filter(launchItem => {
+				return launchItem[dataQuery];
+			});
+		};
 
 		const filterByFailure = apiData.filter(launchItem => {
 			return !launchItem.success;
 		});
 
-		const filterByUpcoming = apiData.filter(launchItem => {
-			return launchItem.upcoming;
-		});
-
 		dataQuery === "success"
-			? setFilteredData(filterBySuccess)
+			? setFilteredData(filterResults(dataQuery))
 			: dataQuery === "upcoming"
-			? setFilteredData(filterByUpcoming)
-			: dataQuery === "failed"
+			? setFilteredData(filterResults(dataQuery))
+			: dataQuery === "failure"
 			? setFilteredData(filterByFailure)
 			: setFilteredData(apiData);
 	}, [dataQuery, apiData]);
